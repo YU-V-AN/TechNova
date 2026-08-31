@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Scrap - E-Waste Recycling Platform</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Leaflet Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation & View Switcher -->
+  <nav class="navbar">
+    <div class="logo">Tech Nova</div>
+    <div class="tab-switcher">
+      <button id="collectorTabBtn" class="tab-btn active">Collector Portal</button>
+      <button id="recyclerTabBtn" class="tab-btn">Recycler Dashboard</button>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- ================= COLLECTOR VIEW ================= -->
+    <main id="collectorView" class="view-panel active-view">
+      <div class="dashboard-grid">
+        
+        <!-- Form Section -->
+        <div class="card-box">
+          <h3>Create Scrap Pickup Request</h3>
+          <form id="collectorForm">
+            <div class="form-group">
+              <label>E-Waste Category</label>
+              <select id="eWasteType" required>
+                <option value="Printed Circuit Boards (PCBs)">PCBs / Motherboards</option>
+                <option value="Copper Cables & Wires">Copper Cables & Wires</option>
+                <option value="Batteries (Li-ion/Lead Acid)">Batteries</option>
+                <option value="Display Screens / CRTs">Display Screens / Monitors</option>
+                <option value="Mixed Electronic Scrap">Mixed Scrap</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Weight (kg)</label>
+              <input type="number" id="weight" min="0.5" step="0.5" placeholder="e.g. 12.5" required>
+            </div>
+
+            <!-- Interactive Pinning Map -->
+            <div class="form-group">
+              <label>Pin Pickup Location (Click map to adjust)</label>
+              <div id="collectorMap" class="map-container"></div>
+              <small id="locationStatus" class="status-hint">📍 Pinned Location: Setting...</small>
+            </div>
+
+            <div class="form-group">
+              <label>Material Photo</label>
+              <input type="file" id="imageInput" accept="image/*" required>
+              <div id="imagePreviewContainer" class="image-preview-box">
+                <img id="imagePreview" src="" alt="Image Preview" style="display:none;" />
+              </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn primary-btn">Submit Pickup Request</button>
+          </form>
+        </div>
+
+        <!-- Real-Time Activity Section -->
+        <div class="card-box">
+          <h3>My Submitted Lots</h3>
+          <div id="collectorStatusList" class="cards-list">
+            <p class="loading">Loading active requests...</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ================= RECYCLER AUTH VIEW (Login / Signup) ================= -->
+    <main id="authView" class="view-panel">
+      <div class="auth-box card-box">
+        <h3 id="authTitle">Authorized Recycler Portal</h3>
+        <p class="auth-subtitle">Log in or create an account to view matched pickup routes.</p>
+
+        <form id="authForm">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="authEmail" placeholder="recycler@org.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="authPassword" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" id="authSubmitBtn" class="btn primary-btn">Log In</button>
+        </form>
+
+        <div class="auth-toggle">
+          <span id="authToggleText">Need an authorized account?</span>
+          <button id="switchAuthModeBtn" class="link-btn">Sign Up</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= RECYCLER DASHBOARD (Protected) ================= -->
+    <main id="recyclerView" class="view-panel">
+      
+      <div class="dashboard-header card-box">
+        <div>
+          <h3>Authorized Recycler Dashboard</h3>
+          <small id="userEmailBadge" class="status-hint">Logged in as: ...</small>
+        </div>
+        <button id="logoutBtn" class="btn logout-btn">Log Out</button>
+      </div>
+
+      <!-- Map Container -->
+      <div class="card-box full-width margin-top">
+        <div class="map-header">
+          <h3>Smart Distance Map & Routing</h3>
+          <small>Pins display live e-waste pickup requests ordered by distance from your base.</small>
+        </div>
+        <div id="recyclerMap" class="map-container map-large"></div>
+      </div>
+
+      <!-- Filter Controls & Cards -->
+      <div class="card-box full-width margin-top">
+        <div class="filter-bar">
+          <h3>Incoming Requests</h3>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="Requested">Pending</button>
+            <button class="filter-btn" data-filter="Accepted">Accepted</button>
+            <button class="filter-btn" data-filter="Completed">Completed</button>
+          </div>
+        </div>
+
+        <div id="recyclerMatchingList" class="cards-list grid-cards">
+          <p class="loading">Scanning for nearby requests...</p>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
